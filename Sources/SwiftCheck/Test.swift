@@ -533,6 +533,26 @@ public func exists<A : Arbitrary>(_ gen : Gen<A>, pf : @escaping (A) throws -> T
 	}
 }
 
+
+/// Syntactic sugar that converts a `Testable` producing thunk into a property.
+/// Useful for wrapping basic tests (that don't involve `Arbitrary` or `Gen`)
+/// in a `property`.
+///
+/// `forOnce { ... }` is equivalent to ` { ... }()`.
+///
+/// Use case:
+///
+/// ```
+/// property("empty array has no elements") <- forOnce {
+///   return [].count == 0
+/// }
+/// ```
+///
+/// - Parameter pf: The thunk in question.
+public func forOnce(_ pf : () -> Testable) -> Testable {
+	return pf()
+}
+
 /// Tests a property and prints the results to stdout.
 ///
 /// - parameter prop: The property to be tested.
